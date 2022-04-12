@@ -47,6 +47,7 @@
     .el-table td,
     .el-table th {
       padding: 0 !important;
+      white-space: nowrap !important;
     }
 
     .el-table .cell {
@@ -76,9 +77,9 @@
     <input class="input" v-model="state" @change="stateChange" placeholder="Type Here Filter">
     </input>
     <el-table :data="tableData" border style="width: 100%;min-height: 64vh;">
-      <el-table-column prop="name" label="小区"> </el-table-column>
-      <el-table-column prop="lane" label="地址"> </el-table-column>
-      <el-table-column v-for="v,i in dates" :label="v" width="60">
+      <el-table-column prop="name" label="小区" width="120"> </el-table-column>
+      <el-table-column prop="lane" label="地址" width="200"> </el-table-column>
+      <el-table-column v-for="v,i in dates" :label="v">
         <template slot-scope="scope">
           <div v-if="scope.row.dm[v]!==undefined"
             style="width: 100%; height: 30px;text-align: center; background-color: rgb(226, 125, 125)">🐏</div>
