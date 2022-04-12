@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="UTF-8" />
-  <!-- import CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
   <style>
+    @import url('/static/lib/element-ui/theme-chalk/index.css');
+
     body {
       width: 90%;
       margin: 20px auto;
@@ -41,18 +41,21 @@
     }
 
     .el-table .el-table__cell {
-      padding: 0;
+      padding: 0 !important;
+    }
+
+    .el-table td,
+    .el-table th {
+      padding: 0 !important;
     }
 
     .el-table .cell {
-      white-space: nowrap;
-      padding: 0;
+      white-space: nowrap !important;
+      padding: 0 !important;
     }
 
     .copy {
       width: 90%;
-      position: absolute;
-      bottom: 0;
       font-family: Arial, Helvetica, sans-serif;
       color: rgb(146, 141, 141);
       text-align: center;
@@ -72,7 +75,7 @@
     <p> Tomorrow will be better</p>
     <input class="input" v-model="state" @change="stateChange" placeholder="Type Here Filter">
     </input>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%;min-height: 64vh;">
       <el-table-column prop="name" label="小区"> </el-table-column>
       <el-table-column prop="lane" label="地址"> </el-table-column>
       <el-table-column v-for="v,i in dates" :label="v" width="60">
@@ -110,13 +113,10 @@
     </a>
   </div>
 </body>
-<!-- import Vue before Element -->
-<script src=" https://cdn.jsdelivr.net/npm/vue/dist/vue.js">
-</script>
-<!-- import JavaScript -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<!-- 引入axios -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/lib/vue/vue.js"></script>
+<script src="/static/lib/element-ui/index.js"></script>
+<script src="/static/lib/axios.min.js"></script>
+<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 
 <script>
   function groupBy (list, fn) {
