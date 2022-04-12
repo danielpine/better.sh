@@ -21,7 +21,7 @@ class SaveHandler(tornado.web.RequestHandler):
         name = self.get_query_argument('name')
         lane = self.get_query_argument('lane')
         PySqlTemplate.save(
-            '''insert into estate(`name`,lane,`from`) values(?,?,?)''', name, lane,'Stranger')
+            '''insert into estate(`name`,lane,`from`) values(?,?,?)''', name, lane, 'Stranger')
         self.write({
             'code': 200,
             'msg': 'success',
@@ -54,12 +54,8 @@ class ListHandler(tornado.web.RequestHandler):
 
         if len(state) > 0:
             state = '%'+'%'.join(state)+'%'
-            total = PySqlTemplate.count('''SELECT
-                                              count(*) 
-                                            FROM
-                                                estate
-                                            where name like ? or lane like ?''',
-                                        state, state)
+            total = PySqlTemplate.count(
+                '''SELECT count(*) FROM  estate  where name like ? or lane like ?''', state, state)
             page = PySqlTemplate.findList(
                 '''
                 SELECT
@@ -76,10 +72,20 @@ class ListHandler(tornado.web.RequestHandler):
                     ) e
                 LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0
                 ORDER BY
-                    e. NAME,
-                    mark_date
+                    e.NAME
                 ''', state, state, (int(current)-1)*int(pageSize), int(pageSize)
             )
+            if len(page) == 0:
+                total = PySqlTemplate.count(
+                    '''SELECT count(*) FROM  record  where name like ?''', state)
+                page = PySqlTemplate.findList(
+                    '''
+                    SELECT
+                        mark_date,name,name as lane
+                    FROM  record  where name like ?
+                    ORDER BY NAME LIMIT ?,?
+                    ''', state,   (int(current)-1)*int(pageSize), int(pageSize)
+                )
         else:
             total = PySqlTemplate.count('select count(*) from estate')
             page = PySqlTemplate.findList(
@@ -98,8 +104,7 @@ class ListHandler(tornado.web.RequestHandler):
                     ) e
                 LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0
                 ORDER BY
-                    e. NAME,
-                    mark_date
+                    e.NAME
                 ''', (int(current)-1)*int(pageSize), int(pageSize))
         self.write({
             'code': 200,
