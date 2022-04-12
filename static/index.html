@@ -127,8 +127,8 @@
     <input class="input" v-model="state" @change="stateChange" placeholder="Type Here Filter">
     </input>
     <el-table :data="tableData" border style="width: 100%;min-height: 55vh;">
-      <el-table-column prop="name" label="小区" show-overflow-tooltip> </el-table-column>
-      <el-table-column prop="lane" label="地址" show-overflow-tooltip> </el-table-column>
+      <el-table-column prop="name" label="小区" width="120" show-overflow-tooltip> </el-table-column>
+      <el-table-column prop="lane" label="地址" width="120" show-overflow-tooltip> </el-table-column>
       <el-table-column v-for="v,i in dates" :label="v">
         <template slot-scope="scope">
           <div v-if="scope.row.dm[v]!==undefined"
