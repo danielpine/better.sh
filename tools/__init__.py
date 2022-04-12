@@ -1,7 +1,10 @@
+import json
 from tools.PySqlTemplate import DataSource, DBTypes, PySqlTemplate
 import os
 import uuid
 import sys
+
+from tools.common import getPythonDataBase
 sys.path.append("..")
 sys.path.append(".")
 
@@ -11,14 +14,17 @@ def generateAccessToken():
 
 
 def setupDataSource():
+    conf = {}
+    with open('conf/app.json', "r", encoding="utf-8") as f:
+        conf = json.loads(f.read())
     PySqlTemplate.set_data_source(
         DataSource(
             dbType=DBTypes.MySql,
-            user='root',
-            password='root',
-            ip='127.0.0.1',
-            port=3306,
-            db='better')
+            user=conf['user'],
+            password=conf['password'],
+            ip=conf['ip'],
+            port=conf['port'],
+            db=conf['db'])
     )
 
 
