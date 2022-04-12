@@ -51,11 +51,9 @@
     .el-table td,
     .el-table th {
       padding: 0 !important;
-      white-space: nowrap !important;
     }
 
     .el-table .cell {
-      white-space: nowrap !important;
       padding: 0 !important;
     }
 
@@ -71,6 +69,54 @@
       top: 10px;
       right: 10px;
     }
+
+    .lane {
+      width: 180px;
+      white-space: nowrap !important;
+    }
+
+    table {
+
+      border-collapse: collapse;
+
+      margin: 0 auto;
+
+      text-align: center;
+
+    }
+
+    table td,
+    table th {
+
+      border: 1px solid #cad9ea;
+
+      color: #666;
+
+      height: 30px;
+
+      text-align: left;
+
+    }
+
+    table thead th {
+
+      background-color: #CCE8EB;
+
+      width: 100px;
+
+    }
+
+    table tr:nth-child(odd) {
+
+      background: #fff;
+
+    }
+
+    table tr:nth-child(even) {
+
+      background: #F5FAFA;
+
+    }
   </style>
 </head>
 
@@ -82,7 +128,7 @@
     </input>
     <el-table :data="tableData" border style="width: 100%;min-height: 55vh;">
       <el-table-column prop="name" label="小区"> </el-table-column>
-      <el-table-column prop="lane" label="地址"> </el-table-column>
+      <el-table-column prop="lane" label="地址" show-overflow-tooltip> </el-table-column>
       <el-table-column v-for="v,i in dates" :label="v" width="60">
         <template slot-scope="scope">
           <div v-if="scope.row.dm[v]!==undefined"
@@ -137,7 +183,7 @@
     el: '#app',
     data () {
       return {
-        version:'0.2-beta',
+        version: '0.2-beta',
         dates: [],
         fullData: [],
         tableData: [],
