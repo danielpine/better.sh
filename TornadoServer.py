@@ -17,7 +17,8 @@ setupDataSource()
 profile = os.getenv('PY_DB_TP')
 
 if __name__ == "__main__":
-    app = tornado.web.Application(routes, debug=profile is not None, static_path=os.path.join(
+    #profile is not None
+    app = tornado.web.Application(routes, debug=True, static_path=os.path.join(
         os.path.dirname(__file__), "static"))
     app.listen(8000)
     log.info('started tornado sever...')
