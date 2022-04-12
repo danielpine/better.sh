@@ -15,6 +15,32 @@ sys.path.append(".")
 log = logging.getLogger(__name__)
 
 
+@route('/record/save')
+class SaveHandler(tornado.web.RequestHandler):
+    def get(self):
+        name = self.get_query_argument('name')
+        lane = self.get_query_argument('lane')
+        PySqlTemplate.save(
+            '''insert into estate(`name`,lane,from) values(?,?,?)''', name, lane,'Stranger')
+        self.write({
+            'code': 200,
+            'msg': 'success',
+        })
+
+
+@route('/record/has')
+class HasHandler(tornado.web.RequestHandler):
+    def get(self):
+        t = self.get_query_argument('t')
+        total = PySqlTemplate.count(
+            '''SELECT count(*) FROM estate where name=?''', t)
+        self.write({
+            'code': 200,
+            'msg': 'success',
+            'data': total
+        })
+
+
 @route('/record/list')
 class ListHandler(tornado.web.RequestHandler):
     def get(self):
