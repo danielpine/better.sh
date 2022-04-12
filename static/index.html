@@ -91,7 +91,8 @@
       <p> Tomorrow will be better</p>
       <input class="input" v-model="state" @change="stateChange" placeholder="Type Here Filter">
       </input>
-      <el-table :data="tableData" border style="width: 100%;">
+      <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData" border style="width: 100%;">
         <el-table-column prop="name" label="小区" show-overflow-tooltip>
         </el-table-column>
         <el-table-column prop="lane" label="地址" show-overflow-tooltip>
@@ -109,7 +110,7 @@
       </el-pagination>
       </el-pagination>
     </div>
-    
+
     <div class="copy">
       <p style="text-align: left;">
         防控疫情,人人有责,足不出户,做好防护
@@ -153,6 +154,7 @@
     data () {
       return {
         version: '0.3-beta',
+        loading: false,
         dates: [],
         fullData: [],
         tableData: [],
@@ -186,6 +188,7 @@
       },
       getData: function () {
         let _this = this
+        _this.loading = true
         axios({
           headers: {
             'Content-Type': 'application/json;charset=UTF-8'
@@ -214,8 +217,10 @@
                 })
               }
             }
+            _this.loading = false
           })
           .catch(function (error) {
+            _this.loading = false
             console.log(error)
             _this.$message({
               type: 'error',
