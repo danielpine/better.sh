@@ -18,11 +18,9 @@ setupDataSource()
 profile = os.getenv('PY_DB_TP')
 
 if __name__ == "__main__":
-    #profile is not None
-    application = tornado.web.Application(routes, debug=True, static_path=os.path.join(
-        os.path.dirname(__file__), "static"))
     plat = platform.system().lower()
-
+    application = tornado.web.Application(routes, debug=plat == 'windows', static_path=os.path.join(
+        os.path.dirname(__file__), "static"))
     if plat == 'windows':
         application.listen(8000)
     elif plat == 'linux':
