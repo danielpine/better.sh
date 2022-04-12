@@ -24,8 +24,11 @@ def put(date, url):
                 print(name)
                 # PySqlTemplate.save(
                 #     'delete from record where name=? and mark_date=? and year=?', name, date, '2022')
-                PySqlTemplate.save(
+                try:
+                  PySqlTemplate.save(
                     'insert into record(name,mark_date,year) values(?,?,?)', name, date, '2022')
+                except:
+                  print('error when:'+name)    
 
 
 urls = [
