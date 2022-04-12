@@ -21,7 +21,7 @@ class SaveHandler(tornado.web.RequestHandler):
         name = self.get_query_argument('name')
         lane = self.get_query_argument('lane')
         PySqlTemplate.save(
-            '''insert into estate(`name`,lane,from) values(?,?,?)''', name, lane,'Stranger')
+            '''insert into estate(`name`,lane,`from`) values(?,?,?)''', name, lane,'Stranger')
         self.write({
             'code': 200,
             'msg': 'success',
