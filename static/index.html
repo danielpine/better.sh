@@ -96,7 +96,7 @@
         element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData" border style="width: 100%;">
         <el-table-column prop="name" label="小区" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="lane" label="地址" show-overflow-tooltip>
+        <el-table-column prop="pubname" label="地址" show-overflow-tooltip>
         </el-table-column>
         <el-table-column v-for="v,i in dates" :label="v" width="50px">
           <template slot-scope="scope">
@@ -187,7 +187,6 @@
         loading: false,
         dates: [],
         fullData: [],
-        tableData: [],
         state: '',
         tableData: [],
         sizeOptions: [10, 15, 20, 25, 30, 50, 100],
@@ -249,7 +248,7 @@
       genDates: function () {
         var today = new Date(new Date() - 1000 * 60 * 60 * 24)
         var dates = []
-        for (var i = 0; i < 15; i++) {
+        for (var i = 0; i < 18; i++) {
           var newDate = new Date(today.getTime() - i * 1000 * 60 * 60 * 24)
           var year = newDate.getFullYear()
           var month =
@@ -273,7 +272,7 @@
             'Content-Type': 'application/json;charset=UTF-8'
           },
           method: 'get',
-          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}`
+          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=${this.dates[this.dates.length-1]}`
         })
           .then(function (response) {
             _this.tableData = []
@@ -292,6 +291,7 @@
                 _this.tableData.push({
                   name: key,
                   lane: element[0].lane,
+                  pubname: element[0].pubname,
                   dm: dm
                 })
               }
