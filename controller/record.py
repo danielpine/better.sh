@@ -51,6 +51,17 @@ class HasHandler(tornado.web.RequestHandler):
             'data': total
         })
 
+@route('/record/stat')
+class StatHandler(tornado.web.RequestHandler):
+    def get(self):
+        data = PySqlTemplate.findOne(
+            '''SELECT * FROM stat where id=?''', 1)
+        self.write({
+            'code': 200,
+            'msg': 'success',
+            'data': data
+        })
+
 
 @route('/record/list')
 class ListHandler(tornado.web.RequestHandler):

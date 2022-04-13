@@ -41,6 +41,8 @@ application = tornado.web.Application(routes, debug=plat == 'windows', static_pa
 def makeStatistics(request):
     uri = request.uri
     try:
+        if uri.startswith('/record/stat'):
+            return
         print(uri)
         if uri.startswith('/static/index.html'):
             print('访问主页')

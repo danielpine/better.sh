@@ -191,7 +191,8 @@
         <br>4.如有错误欢迎提交<a href="https://github.com/danielpine/better.sh/issues"
           target="_blank">issue</a>或联系danielpine@sina.com
       </p>
-      <p>Copyright&nbsp;&copy;&nbsp;2022 Daniel·Yang. All rights reserved. {{version}}</p>
+      <p>Copyright&nbsp;&copy;&nbsp;2022 Daniel·Yang. All rights reserved. version:{{version}},
+        statistics:home~{{stat.home}},api~{{stat.api}}</p>
     </div>
     <a class="github" href="https://github.com/danielpine/better.sh" target="_blank" class="link--github"
       name="&amp;lpos=apps_scodevmw : 83" onclick="s_objectID='apps_scodevmw :  : 83'">
@@ -237,6 +238,7 @@
       return {
         version: '0.3-beta',
         loading: false,
+        stat: {},
         dates: [],
         fullData: [],
         state: '',
@@ -259,7 +261,6 @@
           lane: [
             { required: true, message: '请输入地址', trigger: 'blur' }
           ],
-
         }
       }
     },
@@ -405,11 +406,22 @@
       handleCurrentChange (val) {
         this.current = val
         this.getData()
+      },
+      flushStat () {
+        var that = this
+        axios.get('/record/stat').then(function (r) {
+          that.stat = r.data.data
+        })
       }
     },
     mounted () {
       this.genDates()
       this.getData()
+      if (window.timer) {
+        clearInterval(window.timer)
+      }
+      this.flushStat()
+      window.timer = setInterval(this.flushStat, 5000)
     }
   })
 </script>
