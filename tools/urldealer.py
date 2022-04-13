@@ -29,8 +29,7 @@ def put(date, url):
                     'insert into record(name,mark_date,year) values(?,?,?)', name, date, '2022')
                 except:
                   print('error when:'+name)    
-
-
+#https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA
 urls = [
     ['0411', 'https://mp.weixin.qq.com/s/XVA8da4v3i0CJ0t8f6ZaKg'],
     ['0410', 'https://mp.weixin.qq.com/s/y_y2RIhbhTx_zM4MQkR_CQ'],
