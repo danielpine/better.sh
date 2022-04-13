@@ -66,21 +66,22 @@ def put(url):
 
 
 urls = [
-    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',
-    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',
-    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',
-    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',
-    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',
-    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',
-    'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',
-    'https://mp.weixin.qq.com/s/hnrGo4KvUvxhpjFyiE8-sQ',
-    'https://mp.weixin.qq.com/s/K6jT1wRMSScBhvxcB2yV4g',
-    'https://mp.weixin.qq.com/s/SSFVzOSXPTj-aLzR1tdtxw',
-    'https://mp.weixin.qq.com/s/656rotFOMeDScnKSt6OmyQ',
-    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',
-    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',
-    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',
-    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',
+    'https://mp.weixin.qq.com/s/hnrGo4KvUvxhpjFyiE8-sQ',#0331
+    'https://mp.weixin.qq.com/s/656rotFOMeDScnKSt6OmyQ',#0328
+    'https://mp.weixin.qq.com/s/K6jT1wRMSScBhvxcB2yV4g',#0329
+    'https://mp.weixin.qq.com/s/SSFVzOSXPTj-aLzR1tdtxw',#0330
+    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',#0401
+    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',#0402
+    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',#0403
+    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',#0404
+    'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',#0405
+    'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',#0406
+    'https://mp.weixin.qq.com/s/_Je5_5_HqBcs5chvH5SFfA',#0407
+    'https://mp.weixin.qq.com/s/79NsKhMHbg09Y0xaybTXjA',#0408
+    'https://mp.weixin.qq.com/s/HTM47mUp0GF-tWXkPeZJlg',#0409
+    'https://mp.weixin.qq.com/s/8bljTUplPh1q4MXb6wd_gg',#0410
+    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',#0411
+    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',#0412
 
 ]
 if __name__ == '__main__':
