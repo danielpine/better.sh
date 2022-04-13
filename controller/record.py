@@ -15,6 +15,17 @@ sys.path.append(".")
 log = logging.getLogger(__name__)
 
 
+@route('/record/apply')
+class ApplyHandler(tornado.web.RequestHandler):
+    def post(self):
+        form = json.loads(self.request.body)
+        log.info(form)
+        row = json.dumps(form['row'], ensure_ascii=False)
+        print(row)
+        PySqlTemplate.save(
+            'insert into apply(`row`,`mode`) values(?,?)', row, form['mode'])
+
+
 @route('/record/save')
 class SaveHandler(tornado.web.RequestHandler):
     def get(self):
@@ -67,13 +78,13 @@ class ListHandler(tornado.web.RequestHandler):
                 total = PySqlTemplate.count(
                     '''SELECT count(*) FROM  record  where name like ?''', state)
                 page = PySqlTemplate.findList(
-                    ''' SELECT mark_date,name,name as lane FROM  record  where mark_date>=? and name like ? ORDER BY NAME LIMIT ?,?''', dd , state,   (int(
+                    ''' SELECT mark_date,name,name as lane FROM  record  where mark_date>=? and name like ? ORDER BY NAME LIMIT ?,?''', dd, state,   (int(
                         current)-1)*int(pageSize), int(pageSize)
                 )
         else:
             total = PySqlTemplate.count('select count(*) from estate')
             page = PySqlTemplate.findList(
-                '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(R.`NAME`, E.LANE) > 0 where R.mark_date>=?  ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize),dd)
+                '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(R.`NAME`, E.LANE) > 0 where R.mark_date>=?  ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize), dd)
         self.write({
             'code': 200,
             'msg': 'success',

@@ -13,7 +13,7 @@
 
     body {
       width: 90%;
-      margin: 20px auto;
+      margin: 10px auto;
     }
 
     h1 {
@@ -82,6 +82,21 @@
     table tr:nth-child(even) {
       background: #F5FAFA;
     }
+
+    .demo-table-expand {
+      font-size: 0;
+    }
+
+    .demo-table-expand label {
+      width: 90px;
+      color: #99a9bf;
+    }
+
+    .demo-table-expand .el-form-item {
+      margin-right: 0;
+      margin-bottom: 0;
+      width: 50%;
+    }
   </style>
 </head>
 
@@ -94,9 +109,45 @@
       </input>
       <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData" border style="width: 100%;">
-        <el-table-column prop="name" label="小区" show-overflow-tooltip>
+        <el-table-column type="expand" fixed>
+          <template slot-scope="props">
+            <el-form status-icon label-position="left">
+              <br>
+              <el-form-item label="小区名字" prop="name" :label-width="formLabelWidth">
+                <input :placeholder="props.row.name" v-if="props.row.show" style="width:200px"
+                  v-model="props.row.uname">
+                </input>
+                <span v-else>{{ props.row.name }}</span>
+              </el-form-item>
+              <el-form-item label="小区地址" prop="lane" :label-width="formLabelWidth">
+                <input :placeholder="props.row.lane" v-if="props.row.show" style="width:200px"
+                  v-model="props.row.ulane">
+                </input>
+                <span v-else>{{ props.row.lane }}</span>
+              </el-form-item>
+              <el-form-item label="发布地址" :label-width="formLabelWidth">
+                <span>{{ props.row.pubname }}</span>
+              </el-form-item>
+              <el-form-item v-if="props.row.show" label="如愿意,告诉怎么联系你" prop="lane" :label-width="formLabelWidth">
+                <textarea style="width:200px" placeholder="" v-model="props.row.who">
+                </textarea>
+              </el-form-item>
+              <div v-if="!props.row.show">
+                &nbsp;&nbsp;&nbsp;
+                <el-button type="text" @click="update(props.row)">数据有误,我要修改</el-button>
+              </div>
+              <div v-if="props.row.show">
+                &nbsp;&nbsp;&nbsp;
+                <el-button type="text" @click="apply(props.row,'submit')">提交</el-button>
+                &nbsp;&nbsp;&nbsp;
+                <el-button type="text" @click="apply(props.row,'delete')">脏数据删除</el-button>
+              </div>
+            </el-form>
+          </template>
         </el-table-column>
-        <el-table-column prop="pubname" label="地址" show-overflow-tooltip>
+        <el-table-column prop="name" label="小区" fixed width="150px" show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column prop="pubname" label="地址" fixed width="150px" show-overflow-tooltip>
         </el-table-column>
         <el-table-column v-for="v,i in dates" :label="v" width="50px">
           <template slot-scope="scope">
@@ -115,7 +166,7 @@
         没找到你的小区,可能小区信息不足,帮忙<el-button type="text" @click="dialogFormVisible = true">添加一个</el-button>?
       </div>
     </div>
-    
+
 
     <el-dialog title="添加小区" :visible.sync="dialogFormVisible">
       <el-form :model="form" status-icon :rules="rules" ref="ruleForm">
@@ -198,7 +249,7 @@
           name: '',
           lane: ''
         },
-        formLabelWidth: '60px',
+        formLabelWidth: '120px',
         rules: {
           name: [
             { required: true, message: '请输入地址', trigger: 'blur' },
@@ -212,6 +263,39 @@
       }
     },
     methods: {
+      update (row) {
+        row.uname = row.name
+        row.ulane = row.lane
+        row.who = ':) '
+        row.show = true
+      },
+      apply (row, mode) {
+        var _this = this
+        axios({
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          method: 'post',
+          data: {
+            row: row,
+            mode: mode
+          },
+          url: `/record/apply`
+        })
+          .then(function (response) {
+            _this.$message({
+              type: 'success',
+              message: '提交成功,等待审核.'
+            })
+          })
+          .catch(function (error) {
+            console.log(error)
+            _this.$message({
+              type: 'error',
+              message: error.message
+            })
+          })
+      },
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -223,9 +307,9 @@
               method: 'get',
               url: `/record/save?name=${_this.form.name}&lane=${_this.form.lane}`
             })
-            .then(function (response) {
+              .then(function (response) {
                 _this.dialogFormVisible = false
-                _this.state=_this.form.name
+                _this.state = _this.form.name
                 _this.getData()
               })
               .catch(function (error) {
@@ -272,7 +356,7 @@
             'Content-Type': 'application/json;charset=UTF-8'
           },
           method: 'get',
-          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=${this.dates[this.dates.length-1]}`
+          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=${this.dates[this.dates.length - 1]}`
         })
           .then(function (response) {
             _this.tableData = []
@@ -291,6 +375,7 @@
                 _this.tableData.push({
                   name: key,
                   lane: element[0].lane,
+                  show: false,
                   pubname: element[0].pubname,
                   dm: dm
                 })

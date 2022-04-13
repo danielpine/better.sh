@@ -166,25 +166,6 @@ class PySqlTemplate():
             self.__statement = self.__statement.replace('?', '%s')
             # self.__params = [str(x)for x in self.__params]
 
-    def __preparer(self):
-        if PySqlTemplate.data_source.db_type() == DBTypes.Oracle:
-            i = 1
-            params_map = {}
-            for p in self.__params:
-                params_map['P' + str(i)] = p
-                i += 1
-            self.__params = params_map
-            self.__statement = self.__statement.replace('?', '{}').format(
-                *map(lambda k: ':' + str(k), params_map.keys())).upper()
-        elif PySqlTemplate.data_source.db_type() == DBTypes.MySql:
-            self.__statement = self.__statement.replace('?', '%s')
-            # self.__params = [str(x)for x in self.__params]
-
-    def paramsr(self, *params):
-        self.__params = params
-        self.__preparer()
-        return self
-
     def params(self, *params):
         self.__params = params
         self.__prepare()
