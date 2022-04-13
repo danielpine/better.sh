@@ -51,8 +51,10 @@ def makeStatistics(request):
             print('调用接口 %s' % uri)
             PySqlTemplate.save('update stat set api=api+1 where id=1')
             if uri.startswith('/record/list?state'):
+                remote_ip = request.headers.get("X-Real-Ip", "")
+                print(remote_ip)
                 PySqlTemplate.save(
-                    'insert into search(search,ip) values(?,?)', urllib.parse.unquote(uri), request.remote_ip)
+                    'insert into search(search,ip) values(?,?)', urllib.parse.unquote(uri), remote_ip)
     except:
         pass
 
