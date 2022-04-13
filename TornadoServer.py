@@ -65,7 +65,7 @@ def middleware(request):
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(middleware)
-    http_server.listen(8000)
+    http_server.listen(8000, xheaders = True)
     if plat == 'linux':
         http_server.start(num_processes=12)
     log.info('started tornado sever...')
