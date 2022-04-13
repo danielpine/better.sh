@@ -45,6 +45,7 @@ urls = [
 
 ]
 if __name__ == '__main__':
-    for a in urls:
-        put(a)
-        print(a)
+    # for a in urls:
+    #     put(a)
+    #     print(a)
+    PySqlTemplate.save("UPDATE estate set lane=SUBSTRING(lane FROM locate(?, lane)+1) where lane like ? ",')','%)%')
