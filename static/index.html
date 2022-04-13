@@ -184,9 +184,10 @@
     </el-dialog>
     <div class="copy">
       <p style="text-align: left;">
-        1.防控疫情,人人有责,足不出户,做好防护
+        1.防控疫情,人人有责,足不出户,做好防护<el-button size="small" type="text"></el-button>
         <br>2.数据来源上海发布公众号,根据上海发布每日更新,可能会有延迟
-        <br>3.小区数据可能有缺失,欢迎加入维护
+        <br>3.小区数据可能有缺失,部分村可能包含多个弄,欢迎<el-button size="small" type="text" @click="dialogFormVisible = true">添加
+        </el-button>维护独立的地址:)
         <br>4.如有错误欢迎提交<a href="https://github.com/danielpine/better.sh/issues"
           target="_blank">issue</a>或联系danielpine@sina.com
       </p>
