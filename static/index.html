@@ -365,18 +365,42 @@
             _this.total = response.data.total
             _this.fullData = response.data.data
             var temp = groupBy(_this.fullData, function (d) {
-              return d.name+','+d.district
+              return d.name + ',' + d.district
             })
+            var newDate = new Date()
+            var year = newDate.getFullYear()
+            var month =
+              parseInt(newDate.getMonth()) + 1 > 9
+                ? parseInt(newDate.getMonth()) + 1
+                : '0' + (parseInt(newDate.getMonth()) + 1)
+            var day =
+              newDate.getDate() > 9
+                ? newDate.getDate()
+                : '0' + newDate.getDate()
+            var fullDate = `${year}-${month}-${day}`
+            var today = new Date(fullDate)
             for (const key in temp) {
               if (Object.hasOwnProperty.call(temp, key)) {
                 const element = temp[key]
                 dm = {}
+                sheep = []
                 element.forEach(function (e) {
                   dm[e.mark_date] = e
+                  sheep.push(e.mark_date)
                 })
-                var lane=element[0].lane
-                if(element[0].district){
-                  lane=`(${element[0].district})`+lane
+                var mark = -1
+                if (sheep) {
+                  sheep.sort().reverse()
+                  var mmdd = sheep[0]
+                  var dt = `2022-${mmdd.substring(0, 2)}-${mmdd.substring(2)}`
+                  console.log(dt)
+                  var date = new Date(dt)
+                  var delta = (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+                  console.log(delta)
+                }
+                var lane = element[0].lane
+                if (element[0].district) {
+                  lane = `(${element[0].district})` + lane
                 }
                 _this.tableData.push({
                   name: element[0].name,
