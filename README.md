@@ -1,0 +1,2 @@
+# better.sh
+Count 🐏
