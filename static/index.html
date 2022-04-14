@@ -8,6 +8,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <link rel="shortcut icon" href="/static/favicon.ico" />
+  <link rel="stylesheet" href="/static/lib/tribute.css" />
+
   <style>
     @import url('/static/lib/element-ui/theme-chalk/index.css');
 
@@ -23,6 +25,27 @@
     p {
       color: #999;
       font-size: 12px;
+    }
+
+    .tribute-demo-input {
+      outline: none;
+      border: 1px solid #eee;
+      padding: 3px 5px;
+      border-radius: 2px;
+      font-size: 15px;
+      min-height: 32px;
+      cursor: text;
+    }
+
+    .tribute-demo-input:focus {
+      border-color: #d1d1d1;
+      background-color: #fbfbfb;
+    }
+
+    [contenteditable="true"]:empty:before {
+      content: attr(placeholder);
+      display: block;
+      color: #ccc;
     }
 
     .input {
@@ -97,6 +120,14 @@
       margin-bottom: 0;
       width: 50%;
     }
+
+    #test-autocomplete-container {
+      position: relative;
+    }
+
+    .float-right {
+      float: right;
+    }
   </style>
 </head>
 
@@ -105,11 +136,13 @@
     <div style="min-height: 82vh;">
       <h1>I ❥ SH</h1>
       <p> Tomorrow will be better</p>
-      <input class="input" v-model="state" @change="stateChange" placeholder="Type Here Filter">
-      </input>
-      <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+      <div id="test-autocomplete-container">
+        <input class="input" id="search" v-model="state" @change="stateChange" placeholder="Type Here Filter">
+        </input>
+      </div>
+      <el-table v-loading="loading" max-height="80vh" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData" border style="width: 100%;">
-        <el-table-column type="expand" fixed>
+        <el-table-column type="expand" fixed width="20px">
           <template slot-scope="props">
             <el-form status-icon label-position="left">
               <br>
@@ -145,9 +178,19 @@
             </el-form>
           </template>
         </el-table-column>
+        <el-table-column  label="L" width="30px" fixed>
+          <template slot-scope="scope">
+            <div v-if="scope.row.delta >= 14 "
+              style="width: 100%; height: 30px;text-align: center; background-color: rgb(140, 232, 123)">14+</div>
+            <div v-else-if="scope.row.delta >= 7 "
+              style="width: 100%; height: 30px;text-align: center; background-color: rgb(219, 240, 62)">{{scope.row.delta}}</div>
+            <div v-else
+              style="width: 100%; height: 30px;text-align: center; background-color: rgb(226, 125, 125)">{{scope.row.delta}}</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="小区" fixed width="150px" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column prop="lane" label="地址" fixed width="150px" show-overflow-tooltip>
+        <el-table-column prop="lane" label="地址" width="150px" show-overflow-tooltip>
         </el-table-column>
         <el-table-column v-for="v,i in dates" :label="v" width="50px">
           <template slot-scope="scope">
@@ -211,7 +254,7 @@
 <script src="/static/lib/vue/vue.js"></script>
 <script src="/static/lib/element-ui/index.js"></script>
 <script src="/static/lib/axios.min.js"></script>
-<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+<script src="/static/lib/tribute.js"></script>
 
 <script>
   function groupBy (list, fn) {
@@ -388,14 +431,14 @@
                   dm[e.mark_date] = e
                   sheep.push(e.mark_date)
                 })
-                var mark = -1
+                var delta = 14
                 if (sheep) {
                   sheep.sort().reverse()
                   var mmdd = sheep[0]
                   var dt = `2022-${mmdd.substring(0, 2)}-${mmdd.substring(2)}`
                   console.log(dt)
                   var date = new Date(dt)
-                  var delta = (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+                  delta = (today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
                   console.log(delta)
                 }
                 var lane = element[0].lane
@@ -405,6 +448,7 @@
                 _this.tableData.push({
                   name: element[0].name,
                   lane: lane,
+                  delta: delta,
                   district: element[0].district,
                   show: false,
                   pubname: element[0].pubname,
@@ -441,6 +485,71 @@
         axios.get('/record/stat').then(function (r) {
           that.stat = r.data.data
         })
+      },
+      initialTribute () {
+        // example of alternative callback
+        this.tribute = new Tribute({
+          menuContainer: document.getElementById(
+            "test-autocomplete-container"
+          ),
+          // autocompleteMode: true,
+          noMatchTemplate: "",
+          values: [
+            {
+              key: "行政区",
+              value: "行政区",
+              children: [
+                '浦东',
+                '黄浦',
+                '静安',
+                '徐汇',
+                '长宁',
+                '普陀',
+                '虹口',
+                '杨浦',
+                '宝山',
+                '闵行',
+                '嘉定',
+                '金山',
+                '松江',
+                '青浦',
+                '奉贤',
+                '崇明',
+              ]
+            },
+            { key: "小区:", value: "小区:" },
+            { key: "地址:", value: "地址:", }
+          ],
+          selectTemplate: function (item) {
+            if (typeof item === "undefined") return null;
+            if (this.range.isContentEditable(this.current.element)) {
+              return (
+                '<span contenteditable="false"><a href="http://zurb.com" target="_blank" title="' +
+                item.original.email +
+                '">' +
+                item.original.value +
+                "</a></span>"
+              );
+            }
+            return "@" + item.original.value;
+          },
+          requireLeadingSpace: false,
+          menuItemTemplate: function (item) {
+            return '<span contenteditable="false"><a href="http://zurb.com" target="_blank" title="' +
+              item.original.email +
+              '">' +
+              item.original.value +
+              "</a></span>"
+          }
+        });
+        var that = this
+        this.tribute.attach(document.getElementById("search"));
+        document
+          .getElementById("search")
+          .addEventListener("tribute-replaced", function (e) {
+            console.log("Original Event:", e.detail.event);
+            console.log("Matched item:", e.detail.item);
+          });
       }
     },
     mounted () {
@@ -451,6 +560,7 @@
       }
       this.flushStat()
       window.timer = setInterval(this.flushStat, 5000)
+      // this.initialTribute()
     }
   })
 </script>

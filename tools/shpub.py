@@ -1,26 +1,22 @@
-import json
-from functools import reduce
-import os
-from tools import setupDataSource
-from tools.PySqlTemplate import PySqlTemplate
-from base64 import encode
-from requests_html import HTMLSession, HTMLResponse
 import datetime
+from requests_html import HTMLSession, HTMLResponse
+import json
 import sys
 sys.path.append("..")
 sys.path.append(".")
 
-setupDataSource()
-
 
 def putData(url, unique, save):
+    from tools import setupDataSource
+    from tools.PySqlTemplate import PySqlTemplate
+    setupDataSource()
     year = '2022'
     uc = 0
     data = {}
     if unique:
         uc = PySqlTemplate.count(
             'select count(*) from urls where url=?', url.strip())
-    
+
     if uc == 0:
         session = HTMLSession()
         site: HTMLResponse = session.get(url)
@@ -31,7 +27,7 @@ def putData(url, unique, save):
         collect = site.html.find('p')
         district = ''
         maps = {}
-        data['sheep']=maps
+        data['sheep'] = maps
         for item in collect:
             if '分别居住于' in item.text and '区' in item.text:
                 district = item.text.split('区')[0]
@@ -92,7 +88,7 @@ def putData(url, unique, save):
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
     else:
         print('has recorde '+url)
-        data['info']='has recorde '+url
+        data['info'] = 'has recorde '+url
     return data
 
 
@@ -118,5 +114,5 @@ urls = [
 ]
 if __name__ == '__main__':
     for a in urls:
-        putData(a, True, True)
+        putData(a, False, False)
         print(a)
