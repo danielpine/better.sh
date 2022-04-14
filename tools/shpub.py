@@ -37,20 +37,18 @@ def put(url, unique, save):
                 print(district)
                 maps[district] = []
                 continue
-            if ((district in ['长宁', '虹口', '金山']
-                and '已对相关' not in item.text
-                and '无症状感染者' not in item.text
-                and '微信平台' not in item.text
-                and '滑动查看更多' not in item.text
-                and '2022' not in item.text)
-                or
-                (len(item.text) > 2
-                and (item.text[-1]  in ['，',',','。','、'])
-                and '已对相关' not in item.text
+            if not district:
+                continue
+            if (('已对相关' not in item.text
                 and '无症状感染者' not in item.text
                 and '微信平台' not in item.text
                 and '滑动查看更多' not in item.text
                 and '2022' not in item.text
+                and '各区卫健委' not in item.text
+                and '新闻办' not in item.text
+                and '编辑' not in item.text
+                and '微信扫一扫' not in item.text
+                and '1例为' not in item.text
                  )):
                 names = item.text.replace('，', '').replace('。', '').strip()
                 if names:
@@ -63,29 +61,28 @@ def put(url, unique, save):
                             maps[district].append(name)
         with open(date+'.json', "w", encoding="utf-8")as f:
             json.dump(maps, f, ensure_ascii=False, indent=4)
-        for d in maps:
-            print('===')
-            print(d)
-            print('===')
-            for name in maps[d]:
-                # print(name)
-                if save:
-                    try:
-                        PySqlTemplate.delete(
-                            'delete from estate where name=?', name)
-                        PySqlTemplate.save(
-                            '''insert into estate(`name`,lane,`from`,district) values(?,?,?,?)''',
-                            name, name, 'System', d)
-                    except:
-                        print('error when:'+name)
-                    try:
-                        PySqlTemplate.delete(
-                            'delete from record where name=? and mark_date=?', name, date)
-                        PySqlTemplate.save(
-                            'insert into record(name,mark_date,year) values(?,?,?)', name, date, '2022')
-                    except:
-                        print('error when:'+name)
-            print('---')
+        if save:
+            PySqlTemplate.delete('delete from record where mark_date=?', date)
+            for d in maps:
+                print('===')
+                print(d)
+                print('===')
+                for name in maps[d]:
+                    # print(name)
+                        try:
+                            PySqlTemplate.delete(
+                                'delete from estate where name=?', name)
+                            PySqlTemplate.save(
+                                '''insert into estate(`name`,lane,`from`,district) values(?,?,?,?)''',
+                                name, name, 'System', d)
+                        except:
+                            print('error when:'+name)
+                        try:
+                            PySqlTemplate.save(
+                                'insert into record(name,mark_date,year) values(?,?,?)', name, date, '2022')
+                        except:
+                            print('error when:'+name)
+                print('---')
         if unique:
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
     else:
@@ -102,17 +99,16 @@ urls = [
     'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',#0403
     'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',#0404
     'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',#0405
-    # 'https://mp.weixin.qq.com/s/8bljTUplPh1q4MXb6wd_gg',#0406
+    'https://mp.weixin.qq.com/s/8bljTUplPh1q4MXb6wd_gg',#0406
     'https://mp.weixin.qq.com/s/_Je5_5_HqBcs5chvH5SFfA',#0407
     'https://mp.weixin.qq.com/s/79NsKhMHbg09Y0xaybTXjA',#0408
     'https://mp.weixin.qq.com/s/HTM47mUp0GF-tWXkPeZJlg',#0409
-    # 'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',#0410
-    # 'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',#0411
-    # 'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',#0412
+    'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',#0410
+    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',#0411
+    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',#0412
 
 ]
 if __name__ == '__main__':
     for a in urls:
-        # put(a, False, True)
-        put(a, False, False)
+        put(a, False, True)
         print(a)
