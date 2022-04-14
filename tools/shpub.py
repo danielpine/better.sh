@@ -80,7 +80,7 @@ def put(url, unique, save):
                         print('error when:'+name)
                     try:
                         PySqlTemplate.save(
-                            'insert into record(name,mark_date,year,district) values(?,?,?)', name, date, year, d)
+                            'insert into record(name,mark_date,year,district) values(?,?,?,?)', name, date, year, d)
                     except:
                         print('error when:'+name)
                 print('---')

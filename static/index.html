@@ -162,7 +162,7 @@
         layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
       </el-pagination>
-      <div v-if="tableData.length==0">
+      <div v-if="tableData.length==0 && !loading">
         没找到你的小区,可能小区信息不足,帮忙<el-button type="text" @click="dialogFormVisible = true">添加一个</el-button>?
       </div>
     </div>
@@ -365,7 +365,7 @@
             _this.total = response.data.total
             _this.fullData = response.data.data
             var temp = groupBy(_this.fullData, function (d) {
-              return d.name
+              return d.name+','+d.district
             })
             for (const key in temp) {
               if (Object.hasOwnProperty.call(temp, key)) {
@@ -374,9 +374,14 @@
                 element.forEach(function (e) {
                   dm[e.mark_date] = e
                 })
+                var lane=element[0].lane
+                if(element[0].district){
+                  lane=`(${element[0].district})`+lane
+                }
                 _this.tableData.push({
-                  name: key,
-                  lane: element[0].lane,
+                  name: element[0].name,
+                  lane: lane,
+                  district: element[0].district,
                   show: false,
                   pubname: element[0].pubname,
                   dm: dm
