@@ -33,4 +33,5 @@ def updateData():
 
 
 if __name__ == '__main__':
-    updateData()
+    # updateData()
+    importEs()

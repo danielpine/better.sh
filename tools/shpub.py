@@ -1,24 +1,26 @@
+import json
+from functools import reduce
+import os
+from tools import setupDataSource
+from tools.PySqlTemplate import PySqlTemplate
+from base64 import encode
+from requests_html import HTMLSession, HTMLResponse
+import datetime
 import sys
 sys.path.append("..")
 sys.path.append(".")
-import datetime
-from requests_html import HTMLSession, HTMLResponse
-from base64 import encode
-from tools.PySqlTemplate import PySqlTemplate
-from tools import setupDataSource
-import os
-from functools import reduce
-import json
 
 setupDataSource()
 
 
-def put(url, unique, save):
+def putData(url, unique, save):
     year = '2022'
     uc = 0
+    data = {}
     if unique:
         uc = PySqlTemplate.count(
             'select count(*) from urls where url=?', url.strip())
+    
     if uc == 0:
         session = HTMLSession()
         site: HTMLResponse = session.get(url)
@@ -29,6 +31,7 @@ def put(url, unique, save):
         collect = site.html.find('p')
         district = ''
         maps = {}
+        data['sheep']=maps
         for item in collect:
             if '分别居住于' in item.text and '区' in item.text:
                 district = item.text.split('区')[0]
@@ -51,7 +54,8 @@ def put(url, unique, save):
                 and '微信扫一扫' not in item.text
                 and '1例为' not in item.text
                  )):
-                names = item.text.replace('，', '').replace('。', '').strip()
+                names = item.text.replace('，', '').replace(
+                    '。', '').replace(',', '').strip()
                 if names:
                     l = [names]
                     if '、' in names:
@@ -60,7 +64,7 @@ def put(url, unique, save):
                         name = name.strip()
                         if name:
                             maps[district].append(name)
-        with open(date+'.json', "w", encoding="utf-8")as f:
+        with open('data/'+date+'.json', "w", encoding="utf-8")as f:
             json.dump(maps, f, ensure_ascii=False, indent=4)
         if save:
             PySqlTemplate.delete('delete from record where mark_date=?', date)
@@ -88,29 +92,31 @@ def put(url, unique, save):
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
     else:
         print('has recorde '+url)
+        data['info']='has recorde '+url
+    return data
 
 
 urls = [
-    'https://mp.weixin.qq.com/s/656rotFOMeDScnKSt6OmyQ',#0328
-    'https://mp.weixin.qq.com/s/K6jT1wRMSScBhvxcB2yV4g',#0329
-    'https://mp.weixin.qq.com/s/SSFVzOSXPTj-aLzR1tdtxw',#0330
-    'https://mp.weixin.qq.com/s/hnrGo4KvUvxhpjFyiE8-sQ',#0331
-    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',#0401
-    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',#0402
-    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',#0403
-    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',#0404
-    'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',#0405
-    'https://mp.weixin.qq.com/s/8bljTUplPh1q4MXb6wd_gg',#0406
-    'https://mp.weixin.qq.com/s/_Je5_5_HqBcs5chvH5SFfA',#0407
-    'https://mp.weixin.qq.com/s/79NsKhMHbg09Y0xaybTXjA',#0408
-    'https://mp.weixin.qq.com/s/HTM47mUp0GF-tWXkPeZJlg',#0409
-    'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',#0410
-    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',#0411
-    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',#0412
-    'https://mp.weixin.qq.com/s/L9AffT-SoEBV4puBa_mRqg',#0413
+    'https://mp.weixin.qq.com/s/656rotFOMeDScnKSt6OmyQ',  # 0328
+    'https://mp.weixin.qq.com/s/K6jT1wRMSScBhvxcB2yV4g',  # 0329
+    'https://mp.weixin.qq.com/s/SSFVzOSXPTj-aLzR1tdtxw',  # 0330
+    'https://mp.weixin.qq.com/s/hnrGo4KvUvxhpjFyiE8-sQ',  # 0331
+    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',  # 0401
+    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',  # 0402
+    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',  # 0403
+    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',  # 0404
+    'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',  # 0405
+    'https://mp.weixin.qq.com/s/8bljTUplPh1q4MXb6wd_gg',  # 0406
+    'https://mp.weixin.qq.com/s/_Je5_5_HqBcs5chvH5SFfA',  # 0407
+    'https://mp.weixin.qq.com/s/79NsKhMHbg09Y0xaybTXjA',  # 0408
+    'https://mp.weixin.qq.com/s/HTM47mUp0GF-tWXkPeZJlg',  # 0409
+    'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',  # 0410
+    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',  # 0411
+    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',  # 0412
+    'https://mp.weixin.qq.com/s/L9AffT-SoEBV4puBa_mRqg',  # 0413
 
 ]
 if __name__ == '__main__':
     for a in urls:
-        put(a, True, True)
+        putData(a, True, True)
         print(a)

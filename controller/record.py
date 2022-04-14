@@ -9,6 +9,7 @@ from tools.PySqlTemplate import PySqlTemplate
 from controller import route
 from controller.login import getUserInfoByToken
 from tools.common import Base64Decrypt, Base64Encrypt
+from tools.shpub import putData
 
 sys.path.append("..")
 sys.path.append(".")
@@ -51,11 +52,24 @@ class HasHandler(tornado.web.RequestHandler):
             'data': total
         })
 
+
 @route('/record/stat')
 class StatHandler(tornado.web.RequestHandler):
     def get(self):
         data = PySqlTemplate.findOne(
             '''SELECT * FROM stat where id=?''', 1)
+        self.write({
+            'code': 200,
+            'msg': 'success',
+            'data': data
+        })
+
+
+@route('/record/sheep')
+class ListHandler(tornado.web.RequestHandler):
+    def get(self):
+        url = self.get_query_argument('url')
+        data = putData(url, True, True)
         self.write({
             'code': 200,
             'msg': 'success',
