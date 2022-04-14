@@ -107,9 +107,10 @@ urls = [
     'https://mp.weixin.qq.com/s/u0XfHF8dgfEp8vGjRtcwXA',#0410
     'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',#0411
     'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',#0412
+    'https://mp.weixin.qq.com/s/L9AffT-SoEBV4puBa_mRqg',#0413
 
 ]
 if __name__ == '__main__':
     for a in urls:
-        put(a, False, True)
+        put(a, True, True)
         print(a)
