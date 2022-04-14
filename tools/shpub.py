@@ -14,6 +14,7 @@ setupDataSource()
 
 
 def put(url, unique, save):
+    year = '2022'
     uc = 0
     if unique:
         uc = PySqlTemplate.count(
@@ -69,19 +70,19 @@ def put(url, unique, save):
                 print('===')
                 for name in maps[d]:
                     # print(name)
-                        try:
-                            PySqlTemplate.delete(
-                                'delete from estate where name=?', name)
-                            PySqlTemplate.save(
-                                '''insert into estate(`name`,lane,`from`,district) values(?,?,?,?)''',
-                                name, name, 'System', d)
-                        except:
-                            print('error when:'+name)
-                        try:
-                            PySqlTemplate.save(
-                                'insert into record(name,mark_date,year,district) values(?,?,?)', name, date, '2022', d)
-                        except:
-                            print('error when:'+name)
+                    try:
+                        PySqlTemplate.delete(
+                            'delete from estate where name=? and district=?', name, d)
+                        PySqlTemplate.save(
+                            '''insert into estate(`name`,lane,`from`,district) values(?,?,?,?)''',
+                            name, name, 'System', d)
+                    except:
+                        print('error when:'+name)
+                    try:
+                        PySqlTemplate.save(
+                            'insert into record(name,mark_date,year,district) values(?,?,?)', name, date, year, d)
+                    except:
+                        print('error when:'+name)
                 print('---')
         if unique:
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
