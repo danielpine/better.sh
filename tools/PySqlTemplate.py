@@ -177,8 +177,8 @@ class PySqlTemplate():
     def execute(self):
         conn = PySqlTemplate.data_source.get_conn()
         cur = conn.cursor()
+        log.warn('_statet: %s', self.__statement)
         log.warn('_params: %s', self.__params)
-        log.warn('__statement: %s', self.__statement)
         result = True
         try:
             cur.execute(self.__statement, self.__params)  # 执行sql语句

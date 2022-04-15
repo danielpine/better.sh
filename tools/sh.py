@@ -1,51 +1,29 @@
-import sys
-sys.path.append("..")
-sys.path.append(".")
-import datetime
-from requests_html import HTMLSession, HTMLResponse
-from base64 import encode
-from tools.PySqlTemplate import PySqlTemplate
-from tools import setupDataSource
-import os
-from functools import reduce
-import json
+# import sys
 
-setupDataSource()
-c = []
+# from tools.common import extract
+# sys.path.append("..")
+# sys.path.append(".")
+# import datetime
+# from requests_html import HTMLSession, HTMLResponse
+# from base64 import encode
+# from tools.PySqlTemplate import PySqlTemplate
+# from tools import setupDataSource
+# import os
+# from functools import reduce
+# import json
 
+# setupDataSource()
+# state = '@小区:怡东@小区:白杨@地址:浦东@地址:古楼'
 
-def put(url):
-    session = HTMLSession()
-    site: HTMLResponse = session.get(url)
-    title = site.html.find('.rich_media_title', first=True)
-    s = '2022年'+title.text.split('（')[0]
-    date = datetime.datetime.strftime(
-        datetime.datetime.strptime(s.replace('【最新】',''), '%Y年%m月%d日'), r'%m%d')
-    
-    with open(date+'.html', "w", encoding="utf-8") as f:
-        f.write(site.html.full_text)
+# fields = extract(state)
+# if '小区' in fields:
+#     ['%'+'%'.join(st)+'%' for st in fields['小区']]
+#     pass
 
+# countSql = '''SELECT count(*) FROM  estate  where name like ? or lane like ?'''
 
-urls = [
-    'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',
-    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',
-    'https://mp.weixin.qq.com/s/gQDyFLtdILP2NuSBgcjUxg',
-    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',
-    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',
-    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',
-    'https://mp.weixin.qq.com/s/djwW3S9FUYBE2L5Hj94a3A',
-    'https://mp.weixin.qq.com/s/hnrGo4KvUvxhpjFyiE8-sQ',
-    'https://mp.weixin.qq.com/s/K6jT1wRMSScBhvxcB2yV4g',
-    'https://mp.weixin.qq.com/s/SSFVzOSXPTj-aLzR1tdtxw',
-    'https://mp.weixin.qq.com/s/656rotFOMeDScnKSt6OmyQ',
-    'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',
-    'https://mp.weixin.qq.com/s/MkKsQkgvUWbwj8z9jG_Zng',
-    'https://mp.weixin.qq.com/s/uj4TYASUn2YJZQMg2aUvdw',
-    'https://mp.weixin.qq.com/s/2VWTo6e9gmWJ0vxeZ4PhIw',
-
-]
-if __name__ == '__main__':
-    # for a in urls:
-    #     put(a)
-    #     print(a)
-    PySqlTemplate.save("UPDATE estate set lane=SUBSTRING(lane FROM locate(?, lane)+1) where lane like ? ",')','%)%')
+# total = PySqlTemplate.count(countSql)
+# page = PySqlTemplate.findList(
+#     ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 where r.mark_date>=? ORDER BY e.NAME''', state, state, (int(
+#         current)-1)*int(pageSize), int(pageSize), dd
+# )

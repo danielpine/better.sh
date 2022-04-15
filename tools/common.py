@@ -3,6 +3,33 @@ import sys
 sys.path.append("..")
 sys.path.append(".")
 
+#@小区: 白杨 @小区: 怡东 @小区: 芳华 @地址: 叶家桥
+def extract(state):
+    fields = {}
+    curr = None
+    key = None
+    index = 0
+    for i in state:
+        index += 1
+        if i == '@':
+            if key:
+                if curr:
+                    fields[key].append(curr.strip())
+                key = None
+            curr = ''
+        elif i == ':':
+            key = curr
+            if key not in fields:
+                fields[key] = []
+            curr = ''
+        else:
+            curr += i
+
+        if index == len(state):
+            if key and curr:
+                fields[key].append(curr.strip())
+    return fields
+
 
 def getPythonDataBase():
     profile = os.getenv('PY_DB_TP')
