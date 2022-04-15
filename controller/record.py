@@ -65,6 +65,20 @@ class StatHandler(tornado.web.RequestHandler):
         })
 
 
+@route('/record/like')
+class LikeHandler(tornado.web.RequestHandler):
+    def get(self):
+        data = PySqlTemplate.save(
+            '''update stat set `like`=`like`+1 where id=?''', 1)
+        data = PySqlTemplate.findOne(
+            '''SELECT * FROM stat where id=?''', 1)
+        self.write({
+            'code': 200,
+            'msg': 'success',
+            'data': data
+        })
+
+
 @route('/record/sheep')
 class ListHandler(tornado.web.RequestHandler):
     def get(self):

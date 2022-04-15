@@ -26,6 +26,12 @@ def getUserInfoByToken(token):
 status = {}
 
 
+@route(r'/')
+class IndextHandler(tornado.web.RequestHandler):
+    def get(self):
+        return self.redirect("/static/index.html", status=301)
+
+
 @route(r'/logout')
 class LogoutHandler(tornado.web.RequestHandler):
     def post(self):
