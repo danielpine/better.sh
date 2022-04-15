@@ -176,6 +176,7 @@
             加载中<span class="dot">...</span>
           </div>
         </el-image>
+        <p v-if="donate==='alipay'">支付宝赞赏请保存后,打开支付宝扫一扫,老板!</p>
         <br>
         <el-radio-group v-model="donate">
           <el-radio-button label="wechat">微信</el-radio-button>
