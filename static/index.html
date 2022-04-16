@@ -164,9 +164,8 @@
           @change="stateChange">
         </input>
       </div>
-      <el-table v-loading="loading" max-height="70vh" element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData"
-        border style="width: 100%;">
+      <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)" :data="tableData" border style="width: 100%;">
         <el-table-column type="expand" fixed width="20px">
           <template slot-scope="props">
             <el-form status-icon label-position="left">
