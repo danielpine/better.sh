@@ -509,13 +509,7 @@
       }
     },
     mounted () {
-      this.genDates()
-      this.getData()
-      if (window.timer) {
-        clearInterval(window.timer)
-      }
-      this.flushStat()
-      window.timer = setInterval(this.flushStat, 5000)
+      this.flushStat() 
       this.initialTribute()
     }
   })
