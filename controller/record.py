@@ -181,7 +181,7 @@ class ListHandler(tornado.web.RequestHandler):
             else:
                 total = PySqlTemplate.count('select count(*) from estate')
                 page = PySqlTemplate.findList(
-                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district   ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize))  # where R.mark_date>=?, dd)
+                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record R ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district   ORDER BY e.NAME''', (int(current)-1)*int(pageSize), int(pageSize))  # where R.mark_date>=?, dd)
             self.write({
                 'code': 200,
                 'msg': 'success',
