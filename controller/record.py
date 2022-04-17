@@ -106,7 +106,7 @@ class ListHandler(tornado.web.RequestHandler):
             statements += t
 
         if '地址' in fields:
-            s = ['%'+'%'.join(st)+'%' for st in fields['地址']]
+            s = ['%' + st + '%' for st in fields['地址']]
             t = [' lane like ? ' for st in fields['地址']]
             vals += s
             statements += t
@@ -119,12 +119,13 @@ class ListHandler(tornado.web.RequestHandler):
 
         total = PySqlTemplate.count(countSql, *vals)
         print(total)
+        # where r.mark_date>=?
         page = PySqlTemplate.findList(
             ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM 
             ( SELECT * FROM estate %s ORDER BY NAME LIMIT ?,? ) e 
-            LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 where r.mark_date>=? ORDER BY e.NAME''' % sql,
+            LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0  ORDER BY e.NAME''' % sql,
             *vals,
-            (int(current)-1)*int(pageSize), int(pageSize), dd
+            (int(current)-1)*int(pageSize), int(pageSize)
         )
         print(page)
         self.write({
@@ -153,20 +154,20 @@ class ListHandler(tornado.web.RequestHandler):
                 total = PySqlTemplate.count(
                     '''SELECT count(*) FROM  estate  where name like ? or lane like ?''', state, lane)
                 page = PySqlTemplate.findList(
-                    ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 where r.mark_date>=? ORDER BY e.NAME''', state, state, (int(
-                        current)-1)*int(pageSize), int(pageSize), dd
+                    ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0  ORDER BY e.NAME''', state, state, (int(#where r.mark_date>=?
+                        current)-1)*int(pageSize), int(pageSize)#, dd
                 )
                 if len(page) == 0:
                     total = PySqlTemplate.count(
                         '''SELECT count(*) FROM  record  where name like ?''', state)
                     page = PySqlTemplate.findList(
-                        ''' SELECT mark_date,name,name as lane FROM  record  where mark_date>=? and name like ? ORDER BY NAME LIMIT ?,?''', dd, state,   (int(
+                        ''' SELECT mark_date,name,name as lane FROM  record  and name like ? ORDER BY NAME LIMIT ?,?''',   state,   (int(# where mark_date>=?
                             current)-1)*int(pageSize), int(pageSize)
                     )
             else:
                 total = PySqlTemplate.count('select count(*) from estate')
                 page = PySqlTemplate.findList(
-                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(R.`NAME`, E.LANE) > 0 where R.mark_date>=?  ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize), dd)
+                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(R.`NAME`, E.LANE) > 0   ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize))#where R.mark_date>=?, dd)
             self.write({
                 'code': 200,
                 'msg': 'success',

@@ -86,6 +86,10 @@ def putData(url, unique, save):
                 print('---')
         if unique:
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
+        PySqlTemplate.save(
+            '''update stat set `pubdate`=? where id=?''', '%s-%s-%s' % (year, date[:2], date[2:]), 1)
+        PySqlTemplate.save(
+            '''update stat set `updatetm`=? where id=?''', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 1)
     else:
         print('has recorde '+url)
         data['info'] = 'has recorde '+url

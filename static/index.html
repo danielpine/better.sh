@@ -233,19 +233,38 @@
         没找到你的小区,可能小区信息不足,帮忙<el-button type="text" @click="dialogFormVisible = true">添加一个</el-button>?
       </div>
     </div>
-    <div>
-      <ol style="width: 35px;float: left;">
-        <li> <a href="javascript:void(0);" @click="like">
-            <img src="/static/images/tunmp.png" width="35px" height="35px" alt="赞">
-          </a></li>
-        <li style="text-align: center;">{{stat.like||'赞'}}</li>
-      </ol>
-      <ol style="width: 35px;float: left;" class="link">
-        <li> <a href="/static/donate.html">
-            <img src="/static/images/donate.png" width="35px" height="35px" alt="赞">
-          </a></li>
-        <li style="text-align: center;">赏</li>
-      </ol>
+    <div style="float: left;">
+      <div style="width: 35px;float: left; margin-top: 20px;margin-right: 20px;">
+        <ol style="width: 35px;">
+          <li> <a href="javascript:void(0);" @click="like">
+              <img src="/static/images/tunmp.png" width="35px" height="35px" alt="赞">
+            </a></li>
+          <li style="text-align: center;">{{stat.like||'赞'}}</li>
+        </ol>
+      </div>
+      <div style="width: 35px;float: left;margin-top: 20px;margin-right: 20px;">
+        <ol style="width: 35px;float: left;" class="link">
+          <li> <a href="/static/donate.html">
+              <img src="/static/images/donate.png" width="35px" height="35px" alt="赞">
+            </a></li>
+          <li style="text-align: center;">赏</li>
+        </ol>
+      </div>
+      <div style="float: left;">
+        <ol class="copy">
+          <p style="text-align: left;float: left;">
+            <span>0.最新发布日期:{{stat.pubdt}} 数据更新时间:{{stat.updatetm}} </span>
+            <br> <span>1.防控疫情,人人有责,足不出户,做好防护.
+              <br><span>2.数据来源上海发布公众号,根据上海发布每日更新,可能会有延迟,如未更新请耐心等待</span>
+              <br><span>3.小区数据可能有缺失,部分村可能包含多个弄,欢迎<el-button size="small" type="text" @click="dialogFormVisible = true">
+                  添加
+                </el-button>维护独立的地址:)</span>
+              <br><span>4.如有错误欢迎提交<a href="https://github.com/danielpine/better.sh/issues"
+                  target="_blank">issue</a>或联系danielpine@sina.com</span>
+              <br><span>5.免责声明:本站数据仅供参考,以官方发布为准.
+          </p>
+        </ol>
+      </div>
     </div>
     <el-dialog title="添加小区" :visible.sync="dialogFormVisible">
       <el-form :model="form" status-icon :rules="rules" ref="ruleForm">
@@ -261,17 +280,6 @@
         <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
-    <div class="copy">
-      <p style="text-align: left;">
-        <span>1.防控疫情,人人有责,足不出户,做好防护.
-          <br><span>2.数据来源上海发布公众号,根据上海发布每日更新,可能会有延迟.</span>
-          <br><span>3.小区数据可能有缺失,部分村可能包含多个弄,欢迎<el-button size="small" type="text" @click="dialogFormVisible = true">添加
-            </el-button>维护独立的地址:)</span>
-          <br><span>4.如有错误欢迎提交<a href="https://github.com/danielpine/better.sh/issues"
-              target="_blank">issue</a>或联系danielpine@sina.com</span>
-          <br><span>5.免责声明:本站数据仅供参考,以官方发布为准.
-      </p>
-    </div>
     <div class="fixed-bottom">
       <p>Copyright&nbsp;&copy;&nbsp;2022 Daniel·Yang. All rights reserved.
         Version:{{version}},Statistics:home·{{stat.home}},api·{{stat.api}}</p>
@@ -444,7 +452,8 @@
             'Content-Type': 'application/json;charset=UTF-8'
           },
           method: 'get',
-          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=${this.dates[this.dates.length - 1]}`
+          // url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=${this.dates[this.dates.length - 1]}`
+          url: `/record/list?state=${_this.state}&current=${_this.current}&pageSize=${_this.pageSize}&date=0328`
         })
           .then(function (response) {
             _this.tableData = []
@@ -475,9 +484,10 @@
                   sheep.push(e.mark_date)
                 })
                 var delta = 14
-                if (sheep) {
+                if (sheep&&sheep[0]) {
                   sheep.sort().reverse()
                   var mmdd = sheep[0]
+                  console.log(mmdd)
                   var dt = `2022-${mmdd.substring(0, 2)}-${mmdd.substring(2)}`
                   console.log(dt)
                   var date = new Date(dt)
