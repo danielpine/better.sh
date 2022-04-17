@@ -43,16 +43,16 @@ def makeStatistics(request):
     try:
         if uri.startswith('/record/stat'):
             return
-        print(uri)
+        # print(uri)
         if uri.startswith('/static/index.html'):
-            print('访问主页')
+            # print('访问主页')
             PySqlTemplate.save('update stat set home=home+1 where id=1')
         if uri.startswith('/record/'):
-            print('调用接口 %s' % uri)
+            # print('调用接口 %s' % uri)
             PySqlTemplate.save('update stat set api=api+1 where id=1')
             if uri.startswith('/record/list?state'):
                 remote_ip = request.headers.get("X-Real-Ip", "")
-                print(remote_ip)
+                # print(remote_ip)
                 PySqlTemplate.save(
                     'insert into search(search,ip) values(?,?)', urllib.parse.unquote(uri), remote_ip)
     except:

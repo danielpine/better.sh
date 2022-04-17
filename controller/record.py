@@ -22,7 +22,7 @@ class ApplyHandler(tornado.web.RequestHandler):
         form = json.loads(self.request.body)
         log.info(form)
         row = json.dumps(form['row'], ensure_ascii=False)
-        print(row)
+        # print(row)
         PySqlTemplate.save(
             'insert into apply(`row`,`mode`) values(?,?)', row, form['mode'])
 
@@ -96,7 +96,7 @@ class ListHandler(tornado.web.RequestHandler):
 
     def handleMultiSearch(self, state, pageSize, current, dd):
         fields = extract(state)
-        print(fields)
+        # print(fields)
         vals = []
         statements = []
         sql=''
@@ -132,16 +132,16 @@ class ListHandler(tornado.web.RequestHandler):
         countSql = '''SELECT count(name) FROM  estate %s''' % sql
 
         total = PySqlTemplate.count(countSql, *vals)
-        print(total)
+        # print(total)
         # where r.mark_date>=?
         page = PySqlTemplate.findList(
             ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM 
             ( SELECT * FROM estate %s ORDER BY NAME LIMIT ?,? ) e 
-            LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0  ORDER BY e.NAME''' % sql,
+            LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district  ORDER BY e.NAME''' % sql,
             *vals,
             (int(current)-1)*int(pageSize), int(pageSize)
         )
-        print(page)
+        # print(page)
         self.write({
             'code': 200,
             'msg': 'success',
@@ -168,7 +168,7 @@ class ListHandler(tornado.web.RequestHandler):
                 total = PySqlTemplate.count(
                     '''SELECT count(*) FROM  estate  where name like ? or lane like ?''', state, lane)
                 page = PySqlTemplate.findList(
-                    ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0  ORDER BY e.NAME''', state, state, (int(  # where r.mark_date>=?
+                    ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district  ORDER BY e.NAME''', state, state, (int(  # where r.mark_date>=?
                         current)-1)*int(pageSize), int(pageSize)  # , dd
                 )
                 if len(page) == 0:
@@ -181,7 +181,7 @@ class ListHandler(tornado.web.RequestHandler):
             else:
                 total = PySqlTemplate.count('select count(*) from estate')
                 page = PySqlTemplate.findList(
-                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(R.`NAME`, E.LANE) > 0   ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize))  # where R.mark_date>=?, dd)
+                    '''SELECT E.*, R.mark_date, R.`NAME` AS pubname FROM ( SELECT * FROM estate ORDER BY NAME LIMIT ?,? ) E LEFT JOIN record R ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district   ORDER BY E. NAME''', (int(current)-1)*int(pageSize), int(pageSize))  # where R.mark_date>=?, dd)
             self.write({
                 'code': 200,
                 'msg': 'success',

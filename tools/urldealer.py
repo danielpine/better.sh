@@ -1,13 +1,11 @@
-import sys
-
+from requests_html import HTMLSession, HTMLResponse
+from base64 import encode
 sys.path.append("..")
 sys.path.append(".")
 
-
-from tools import setupDataSource
 from tools.PySqlTemplate import PySqlTemplate
-from base64 import encode
-from requests_html import HTMLSession, HTMLResponse
+from tools import setupDataSource
+import sys
 
 setupDataSource()
 c = []
@@ -21,7 +19,7 @@ def put(date, url):
         if len(item.text) > 2 and (item.text[-1] == '、' or item.text[-1] == '。') and '已对相关' not in item.text and '共话松江' not in item.text:
             name = item.text.replace('、', '').replace('。', '').strip()
             if name:
-                print(name)
+                # print(name)
                 # PySqlTemplate.save(
                 #     'delete from record where name=? and mark_date=? and year=?', name, date, '2022')
                 try:
@@ -29,6 +27,7 @@ def put(date, url):
                         'insert into record(name,mark_date,year) values(?,?,?)', name, date, '2022')
                 except:
                     print('error when:'+name)
+                    pass
 
 
 # https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA
@@ -52,4 +51,4 @@ urls = [
 if __name__ == '__main__':
     for a in urls:
         put(a[0], a[1])
-        print(a[0], a[1])
+        # print(a[0], a[1])

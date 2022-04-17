@@ -34,12 +34,12 @@ if __name__ == '__main__':
     countSql = '''SELECT count(name) FROM  estate %s''' % sql
 
     total = PySqlTemplate.count(countSql, *vals)
-    print(total)
+    # print(total)
     page = PySqlTemplate.findList(
         ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM 
         ( SELECT * FROM estate %s ORDER BY NAME LIMIT ?,? ) e 
-        LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 where r.mark_date>=? ORDER BY e.NAME''' % sql,
+        LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district where r.mark_date>=? ORDER BY e.NAME''' % sql,
         *vals,
         (int(current)-1)*int(pageSize), int(pageSize), dd
     )
-    print(page)
+    # print(page)

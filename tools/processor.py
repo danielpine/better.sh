@@ -12,9 +12,9 @@ setupDataSource()
 def importEs():
     with open('estates.json', "r", encoding="utf-8") as f:
         es = json.loads(f.read())
-        print(es)
+        # print(es)
         for i in es:
-            print(i)
+            # print(i)
             PySqlTemplate.save(
                 'insert into estate(name,lane) values(?,?)', i['name'], i['lane'])
 
@@ -23,7 +23,7 @@ def updateData():
     folder = r'data/0411/'
     for filename in os.listdir(folder):
         with open(folder+filename, "r", encoding="utf-8") as f:
-            print(filename[:-4])
+            # print(filename[:-4])
             es = f.read().split('，')
             fnl = [str.strip, str]
             es = [reduce(lambda v, f: f(v), fnl, element) for element in es]

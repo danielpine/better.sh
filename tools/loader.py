@@ -6,7 +6,7 @@ c = []
 session = HTMLSession()
 site: HTMLResponse = session.get('https://sh.ke.com/xiaoqu/pudong/')
 collect = site.html.find('.title .maidian-detail')
-print('start page 1')
+# print('start page 1')
 for item in collect:
     # print(item.attrs['href'], item.attrs['title'])
     site2: HTMLResponse = session.get(item.attrs['href'])
@@ -16,7 +16,7 @@ for item in collect:
         'name': item.attrs['title'],
         'lane': Lane.text
     })
-print('end page 1')
+# print('end page 1')
 for i in range(2, 101):
     session = HTMLSession()
     url = 'https://sh.ke.com/xiaoqu/pudong/pg%d/' % i
@@ -33,6 +33,6 @@ for i in range(2, 101):
             'name': item.attrs['title'],
             'lane': Lane.text
         })
-    print('end   page %d' % i)
+    # print('end   page %d' % i)
 with open('estates.json', "w", encoding="utf-8")as f:
     json.dump(c, f, ensure_ascii=False, indent=4)

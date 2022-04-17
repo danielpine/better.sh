@@ -24,6 +24,6 @@
 
 # total = PySqlTemplate.count(countSql)
 # page = PySqlTemplate.findList(
-#     ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 where r.mark_date>=? ORDER BY e.NAME''', state, state, (int(
+#     ''' SELECT e.*, r.mark_date, r.`name` AS pubname FROM ( SELECT * FROM estate WHERE NAME LIKE ? OR lane LIKE ? ORDER BY NAME LIMIT ?,? ) e LEFT JOIN record r ON LOCATE(r.`name`, e.lane) > 0 and r.district=e.district where r.mark_date>=? ORDER BY e.NAME''', state, state, (int(
 #         current)-1)*int(pageSize), int(pageSize), dd
 # )

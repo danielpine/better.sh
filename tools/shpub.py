@@ -69,7 +69,7 @@ def putData(url, unique, save):
                 print(d)
                 print('===')
                 for name in maps[d]:
-                    # print(name)
+                    print(name)
                     try:
                         PySqlTemplate.delete(
                             'delete from estate where name=? and district=?', name, d)
@@ -87,7 +87,7 @@ def putData(url, unique, save):
         if unique:
             PySqlTemplate.save('insert into urls(url) values(?)', url.strip())
         PySqlTemplate.save(
-            '''update stat set `pubdate`=? where id=?''', '%s-%s-%s' % (year, date[:2], date[2:]), 1)
+            '''update stat set `pubdt`=? where id=?''', '%s-%s-%s' % (year, date[:2], date[2:]), 1)
         PySqlTemplate.save(
             '''update stat set `updatetm`=? where id=?''', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 1)
     else:
@@ -114,9 +114,12 @@ urls = [
     'https://mp.weixin.qq.com/s/vxFiV2HeSvByINUlTmFKZA',  # 0411
     'https://mp.weixin.qq.com/s/OZGM-pNkefZqWr0IFRJj1g',  # 0412
     'https://mp.weixin.qq.com/s/L9AffT-SoEBV4puBa_mRqg',  # 0413
+    'https://mp.weixin.qq.com/s/5T76lht3s6g_KTiIx3XAYw',  # 0414
+    'https://mp.weixin.qq.com/s/ZkhimhWpa92I2EWn3hmd8w',  # 0415
+    'https://mp.weixin.qq.com/s/dRa-PExJr1qkRis88eGCnQ',  # 0416
 
 ]
 if __name__ == '__main__':
     for a in urls:
-        putData(a, False, False)
+        putData(a, True, True)
         print(a)

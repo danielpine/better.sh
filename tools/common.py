@@ -10,7 +10,7 @@ def extract(state):
     key = None
     index = 0
     for i in state:
-        print(i)
+        # print(i)
         index += 1
         if i == '@':
             if key:
@@ -63,7 +63,7 @@ def RSADecrypt(cipher_text):
     cipher = Cipher_pkcs1_v1_5.new(rsakey)
     text = cipher.decrypt(base64.b64decode(cipher_text), None)
     content = text.decode('utf8')
-    print(content)
+    # print(content)
     return content
 
 
