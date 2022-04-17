@@ -8,7 +8,7 @@ if __name__ == '__main__':
     from tools import setupDataSource
 
     setupDataSource()
-    state = '@小区:白杨'
+    state = '芳华 @区县: 浦东 @地址: 白杨'
     current = 1
     pageSize = 10
     dd = '0328'

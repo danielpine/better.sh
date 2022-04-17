@@ -6,10 +6,11 @@ sys.path.append(".")
 #@小区: 白杨 @小区: 怡东 @小区: 芳华 @地址: 叶家桥
 def extract(state):
     fields = {}
-    curr = None
+    curr = ''
     key = None
     index = 0
     for i in state:
+        print(i)
         index += 1
         if i == '@':
             if key:

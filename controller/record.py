@@ -99,6 +99,7 @@ class ListHandler(tornado.web.RequestHandler):
         print(fields)
         vals = []
         statements = []
+        sql=''
         if '小区' in fields:
             s = ['%'+'%'.join(st)+'%' for st in fields['小区']]
             t = [' name like ? ' for st in fields['小区']]
@@ -110,8 +111,8 @@ class ListHandler(tornado.web.RequestHandler):
             t = [' lane like ? ' for st in fields['地址']]
             vals += s
             statements += t
-
-        sql = 'or'.join(statements)
+        if statements:
+            sql = 'or'.join(statements)
 
         andstat = []
         if '区县' in fields:
@@ -120,8 +121,11 @@ class ListHandler(tornado.web.RequestHandler):
             vals += s
             andstat += t
         vals = tuple(v for v in vals)
-        ss = " %s (" % ('and' if sql else '')
-        sql = sql + (ss + 'or'.join(andstat)+" )")
+        
+        if andstat:
+            ss = " %s (" % ('and' if sql else '')
+            sql = sql + (ss + 'or'.join(andstat)+" )")
+        
         if sql:
             sql = ' WHERE '+sql
 
